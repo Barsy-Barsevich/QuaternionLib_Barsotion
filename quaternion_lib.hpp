@@ -1,12 +1,34 @@
 #pragma once
 
-#include <unistd.h>
+#include <cmath>
+using namespace std;
+
+#define __QUATERNION_LIB_LOCATE_RAM
+
+#define __QUATERNION_LIB_ESP32
+//#define __QUATERNION_LIB_MIK32
+
+#if defined(__QUATERNION_LIB_LOCATE_RAM)
+#if defined(__QUATERNION_LIB_ESP32)
+#define QUATERNION_LIB_ATTR		IRAM_ATTR
+#else
+#if defined(__QUATERNION_LIB_MIK32)
+#define QUATERNION_LIB_ATTR		RAM_ATTR
+#endif
+#endif
+#endif
+
 
 
 typedef struct __euler
 {
 	float roll, pitch, yaw;
 } Euler_t;
+
+typedef struct
+{
+	float x, y, z;
+} XYZ_t;
 
 
 class Quaternion_t
@@ -18,6 +40,12 @@ public:
 public:
 	
 	Quaternion_t() {};
+	Quaternion_t(float _w, float _x, float _y, float _z)
+		: w {_w}
+		, x {_x}
+		, y {_y}
+		, z {_z}
+		{}
 	Euler_t getEuler();
 	void fromEuler(Euler_t *euler);
 	void normalize(void);
@@ -26,10 +54,11 @@ public:
 	void multiply(Quaternion_t *q);
 	Quaternion_t operator+(Quaternion_t q1);
 	Quaternion_t operator*(Quaternion_t q1);
+	XYZ_t rotateVect(XYZ_t *v);
 };
 
 
-Euler_t Quaternion_t::getEuler()
+Euler_t QUATERNION_LIB_ATTR Quaternion_t::getEuler()
 {
 //	Euler_t euler;
 //    euler.roll = (atan2f(2.0f*(w*x + y*z), w*w - x*x - y*y + z*z));//*180/3.1428;
@@ -56,7 +85,7 @@ Euler_t Quaternion_t::getEuler()
     return angles;
 }
 
-void Quaternion_t::fromEuler(Euler_t *euler)
+void QUATERNION_LIB_ATTR Quaternion_t::fromEuler(Euler_t *euler)
 {
 	// Abbreviations for the various angular functions
     float cr = cosf(euler->roll * 0.5);
@@ -71,7 +100,7 @@ void Quaternion_t::fromEuler(Euler_t *euler)
     z = cr * cp * sy - sr * sp * cy;
 }
 
-void Quaternion_t::normalize()
+void QUATERNION_LIB_ATTR Quaternion_t::normalize()
 {
 	float norm = sqrtf(x*x + y*y + z*z + w*w);
 	w /= norm;
@@ -80,14 +109,14 @@ void Quaternion_t::normalize()
 	z /= norm;
 }
 
-void Quaternion_t::conjugate()
+void QUATERNION_LIB_ATTR Quaternion_t::conjugate()
 {
 	x = -x;
 	y = -y;
 	z = -z;
 }
 
-void Quaternion_t::add(Quaternion_t *q)
+void QUATERNION_LIB_ATTR Quaternion_t::add(Quaternion_t *q)
 {
 	w += q->w;
 	x += q->x;
@@ -95,7 +124,7 @@ void Quaternion_t::add(Quaternion_t *q)
 	z += q->z;
 }
 
-Quaternion_t Quaternion_t::operator+(Quaternion_t q1)
+Quaternion_t QUATERNION_LIB_ATTR Quaternion_t::operator+(Quaternion_t q1)
 {
 	Quaternion_t q;
 	q = q1;
@@ -103,7 +132,7 @@ Quaternion_t Quaternion_t::operator+(Quaternion_t q1)
 	return q;
 }
 
-void Quaternion_t::multiply(Quaternion_t *q)
+void QUATERNION_LIB_ATTR Quaternion_t::multiply(Quaternion_t *q)
 {
     w = w * q->w - x * q->x - y * q->y - z * q->z;
     x = w * q->x + x * q->w + y * q->z - z * q->y;
@@ -111,7 +140,7 @@ void Quaternion_t::multiply(Quaternion_t *q)
     z = w * q->z + x * q->y - y * q->x + z * q->w;
 }
 
-Quaternion_t Quaternion_t::operator*(Quaternion_t q1)
+Quaternion_t QUATERNION_LIB_ATTR Quaternion_t::operator*(Quaternion_t q1)
 {
 	Quaternion_t q;
 	q.w = w;
@@ -120,4 +149,9 @@ Quaternion_t Quaternion_t::operator*(Quaternion_t q1)
 	q.z = z;
 	q.multiply(&q1);
 	return q;
+}
+
+XYZ_t QUATERNION_LIB_ATTR Quaternion_t::rotateVect(XYZ_t *v)
+{
+	return *v;
 }
