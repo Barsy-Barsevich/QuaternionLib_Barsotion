@@ -1,1 +1,1 @@
-# QuaternionLib_Barsotion for Inertial Navigation Systems
+# A simple quaternion lib for inertial navigation systems
