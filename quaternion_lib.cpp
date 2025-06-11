@@ -64,6 +64,57 @@ Euler_t& Euler_t::operator*=(const float val)
 	return *this;
 }
 
+XYZ_t XYZ_t::operator+(const XYZ_t& vect) const
+{
+	XYZ_t res = *this;
+	res.x += vect.x;
+	res.y += vect.y;
+	res.z += vect.z;
+	return res;
+}
+
+XYZ_t XYZ_t::operator-(const XYZ_t& vect) const
+{
+	XYZ_t res = *this;
+	res.x -= vect.x;
+	res.y -= vect.y;
+	res.z -= vect.z;
+	return res;
+}
+
+XYZ_t XYZ_t::operator*(const float val) const
+{
+	XYZ_t res = *this;
+	res.x *= val;
+	res.y *= val;
+	res.z *= val;
+	return res;
+}
+
+XYZ_t& XYZ_t::operator+=(const XYZ_t& vect)
+{
+	x += vect.x;
+	y += vect.y;
+	z += vect.z;
+	return *this;
+}
+
+XYZ_t& XYZ_t::operator-=(const XYZ_t& vect)
+{
+	x -= vect.x;
+	y -= vect.y;
+	z -= vect.z;
+	return *this;
+}
+
+XYZ_t& XYZ_t::operator*=(const float val)
+{
+	x *= val;
+	y *= val;
+	z *= val;
+	return *this;
+}
+
 
 Euler_t QUATERNION_LIB_ATTR Quaternion_t::getEuler()
 {

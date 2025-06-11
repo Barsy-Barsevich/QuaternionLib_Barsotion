@@ -52,10 +52,22 @@ public:
 	Euler_t& operator*=(const float val);
 };
 
-typedef struct
+struct XYZ_t
 {
 	float x, y, z;
-} XYZ_t;
+	XYZ_t() = default;
+	XYZ_t(float _x, float _y, float _z)
+		: x(_x)
+		, y(_y)
+		, z(_z)
+	{}
+	XYZ_t operator+(const XYZ_t& vect) const;
+	XYZ_t operator-(const XYZ_t& vect) const;
+	XYZ_t operator*(const float val) const;
+	XYZ_t& operator+=(const XYZ_t& vect);
+	XYZ_t& operator-=(const XYZ_t& vect);
+	XYZ_t& operator*=(const float val);
+};
 
 
 class Quaternion_t
