@@ -52,23 +52,6 @@ public:
 	Euler_t& operator*=(const float val);
 };
 
-struct XYZ_t
-{
-	float x, y, z;
-	XYZ_t() = default;
-	XYZ_t(float _x, float _y, float _z)
-		: x(_x)
-		, y(_y)
-		, z(_z)
-	{}
-	XYZ_t operator+(const XYZ_t& vect) const;
-	XYZ_t operator-(const XYZ_t& vect) const;
-	XYZ_t operator*(const float val) const;
-	XYZ_t& operator+=(const XYZ_t& vect);
-	XYZ_t& operator-=(const XYZ_t& vect);
-	XYZ_t& operator*=(const float val);
-};
-
 
 class Quaternion_t
 {
@@ -92,12 +75,30 @@ public:
 	Euler_t getEuler();
 	void fromEuler(Euler_t& euler);
 	void normalize(void);
-	void conjugate(void);
+	Quaternion_t conjugate(void);
 	void add(const Quaternion_t& q);
 	void multiply(const Quaternion_t& q);
 	Quaternion_t operator+(const Quaternion_t& q1);
 	Quaternion_t operator*(const Quaternion_t& q1);
 	Quaternion_t& operator+=(const Quaternion_t& q);
 	Quaternion_t& operator*=(const Quaternion_t& q);
-	XYZ_t rotateVect(XYZ_t *v);
+};
+
+
+struct XYZ_t
+{
+	float x, y, z;
+	XYZ_t() = default;
+	XYZ_t(float _x, float _y, float _z)
+		: x(_x)
+		, y(_y)
+		, z(_z)
+	{}
+	XYZ_t operator+(const XYZ_t& vect) const;
+	XYZ_t operator-(const XYZ_t& vect) const;
+	XYZ_t operator*(const float val) const;
+	XYZ_t& operator+=(const XYZ_t& vect);
+	XYZ_t& operator-=(const XYZ_t& vect);
+	XYZ_t& operator*=(const float val);
+	XYZ_t rotate(Quaternion_t& q);
 };

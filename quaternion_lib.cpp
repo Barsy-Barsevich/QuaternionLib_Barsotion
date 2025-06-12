@@ -64,57 +64,6 @@ Euler_t& Euler_t::operator*=(const float val)
 	return *this;
 }
 
-XYZ_t XYZ_t::operator+(const XYZ_t& vect) const
-{
-	XYZ_t res = *this;
-	res.x += vect.x;
-	res.y += vect.y;
-	res.z += vect.z;
-	return res;
-}
-
-XYZ_t XYZ_t::operator-(const XYZ_t& vect) const
-{
-	XYZ_t res = *this;
-	res.x -= vect.x;
-	res.y -= vect.y;
-	res.z -= vect.z;
-	return res;
-}
-
-XYZ_t XYZ_t::operator*(const float val) const
-{
-	XYZ_t res = *this;
-	res.x *= val;
-	res.y *= val;
-	res.z *= val;
-	return res;
-}
-
-XYZ_t& XYZ_t::operator+=(const XYZ_t& vect)
-{
-	x += vect.x;
-	y += vect.y;
-	z += vect.z;
-	return *this;
-}
-
-XYZ_t& XYZ_t::operator-=(const XYZ_t& vect)
-{
-	x -= vect.x;
-	y -= vect.y;
-	z -= vect.z;
-	return *this;
-}
-
-XYZ_t& XYZ_t::operator*=(const float val)
-{
-	x *= val;
-	y *= val;
-	z *= val;
-	return *this;
-}
-
 
 Euler_t QUATERNION_LIB_ATTR Quaternion_t::getEuler()
 {
@@ -167,11 +116,13 @@ void QUATERNION_LIB_ATTR Quaternion_t::normalize()
 	z /= norm;
 }
 
-void QUATERNION_LIB_ATTR Quaternion_t::conjugate()
+Quaternion_t QUATERNION_LIB_ATTR Quaternion_t::conjugate()
 {
-	x = -x;
-	y = -y;
-	z = -z;
+	Quaternion_t res = *this;
+	res.x = -x;
+	res.y = -y;
+	res.z = -z;
+	return res;
 }
 
 void QUATERNION_LIB_ATTR Quaternion_t::add(const Quaternion_t& q)
@@ -216,7 +167,62 @@ Quaternion_t& QUATERNION_LIB_ATTR Quaternion_t::operator*=(const Quaternion_t& q
 	return *this;
 }
 
-XYZ_t QUATERNION_LIB_ATTR Quaternion_t::rotateVect(XYZ_t *v)
+XYZ_t XYZ_t::operator+(const XYZ_t& vect) const
 {
-	return *v;
+	XYZ_t res = *this;
+	res.x += vect.x;
+	res.y += vect.y;
+	res.z += vect.z;
+	return res;
+}
+
+XYZ_t XYZ_t::operator-(const XYZ_t& vect) const
+{
+	XYZ_t res = *this;
+	res.x -= vect.x;
+	res.y -= vect.y;
+	res.z -= vect.z;
+	return res;
+}
+
+XYZ_t XYZ_t::operator*(const float val) const
+{
+	XYZ_t res = *this;
+	res.x *= val;
+	res.y *= val;
+	res.z *= val;
+	return res;
+}
+
+XYZ_t& XYZ_t::operator+=(const XYZ_t& vect)
+{
+	x += vect.x;
+	y += vect.y;
+	z += vect.z;
+	return *this;
+}
+
+XYZ_t& XYZ_t::operator-=(const XYZ_t& vect)
+{
+	x -= vect.x;
+	y -= vect.y;
+	z -= vect.z;
+	return *this;
+}
+
+XYZ_t& XYZ_t::operator*=(const float val)
+{
+	x *= val;
+	y *= val;
+	z *= val;
+	return *this;
+}
+
+XYZ_t XYZ_t::rotate(Quaternion_t& q)
+{
+	Quaternion_t this_vect(0, x, y, z);
+	Quaternion_t res;
+	res = q * this_vect;
+	res = res * q.conjugate();
+	return XYZ_t(res.x, res.y, res.z);
 }
